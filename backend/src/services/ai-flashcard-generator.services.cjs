@@ -2,7 +2,7 @@ const { z } = require("zod");
 const { zodResponseFormat } = require("openai/helpers/zod");
 const OpenAI = require("openai");
 const flashcardServices = require("./flashcard.services");
-
+const {Pack} = require("../models/index");
 
 const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_API_KEY,
@@ -68,7 +68,13 @@ async function createFlashCardWithAI(prompt) {
       });
     }
 
-    return true;
+    const pack = await Pack.findOne({
+      where: {
+        name: flashcardData.packName,
+      },
+    });
+
+    return pack.id;
   } catch (error) {
     console.log(
       "There is an error in creating flashcards with AI : service layer",
