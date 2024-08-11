@@ -1,12 +1,5 @@
 const router = require("express").Router();
 const {
-  createPack,
-  deletePack,
-  getAllPacks,
-  updatePack,
-} = require("../../controllers/pack.controller.js");
-
-const {
   createFlashcard,
   deleteFlashcard,
   getFlashcardById,
@@ -14,6 +7,17 @@ const {
   getAllFlashcards,
   getAllFlashcardsByPackId,
 } = require("../../controllers/flashcard.controller.js");
+
+const {
+  createPack,
+  deletePack,
+  getAllPacks,
+  updatePack,
+} = require("../../controllers/pack.controller.js");
+
+const {
+  generateAIFlashCard,
+} = require("../../controllers/ai-flashcard-generator.controller.js");
 
 // Flashcard routes
 
@@ -53,7 +57,6 @@ router.get("/flashcards", getAllFlashcards);
  */
 router.get("/flashcards/pack/:id", getAllFlashcardsByPackId);
 
-
 // Pack routes
 
 /**
@@ -79,5 +82,14 @@ router.get("/packs", getAllPacks);
  * @description Update a pack
  */
 router.put("/pack/:id", updatePack);
+
+// AI Flashcard Generator routes
+
+/**
+ * @route POST /ai-flashcard-generator
+ * @description Generate flashcards using AI
+ */
+
+router.post("/generate-ai", generateAIFlashCard);
 
 module.exports = router;
