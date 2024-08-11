@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import { Routes, Route, Link, Outlet } from "react-router-dom";
 import Layout from "./pages/Layout";
 import FlashcardPackPage from "./components/FlashCardPackPage";
+import AIFlashcardGenerator from "./components/AIFlashCardGenerator";
 function App() {
   return (
     <>
@@ -13,6 +14,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="create-flashcard" element={<CreateFlashCard />} />
             <Route path="/flashcard-pack/:id" element={<FlashcardPackPage/>} />
+            <Route path="/ai-generator" element={<AIFlashcardGenerator/>} />
           </Route>
         </Routes>
       </main>

@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import {
-  Pencil,
-  Image,
-  Trash2,
-  RotateCw,
-} from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
+import axios from "axios";
 
 function ManualFlashcard() {
   const [flashcards, setFlashcards] = useState([
@@ -13,6 +9,8 @@ function ManualFlashcard() {
     { id: 3, front: "", back: "" },
   ]);
 
+  const [packName, setPackName] = useState("");
+
   const addFlashcard = () => {
     const newId = flashcards.length + 1;
     setFlashcards([...flashcards, { id: newId, front: "", back: "" }]);
@@ -20,6 +18,34 @@ function ManualFlashcard() {
 
   const removeFlashcard = (id) => {
     setFlashcards(flashcards.filter((card) => card.id !== id));
+  };
+
+  const onSavePackHandler = (e) => {
+    e.preventDefault();
+
+    const promises = flashcards.map(async (card) => {
+      if (!card.front || !card.back || !packName) {
+        throw new Error("Please fill out all fields");
+      }
+      const response = await axios.post(
+        "http://localhost:3000/api/v1/flashcard",
+        {
+          packName,
+          question: card.front,
+          answer: card.back,
+        }
+      );
+      console.log(response.data);
+      return response.data;
+    });
+
+    Promise.all(promises)
+      .then(() => {
+        alert("Success");
+      })
+      .catch((error) => {
+        alert("Failed: " + error.message);
+      });
   };
 
   return (
@@ -31,7 +57,10 @@ function ManualFlashcard() {
             Create Flashcards
           </h1>
         </div>
-        <button className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2">
+        <button
+          className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2"
+          onClick={onSavePackHandler}
+        >
           <span>Save Pack</span>
         </button>
       </header>
@@ -49,6 +78,8 @@ function ManualFlashcard() {
             id="pack-name"
             placeholder="Enter flashcard pack name"
             className="w-full p-3 border border-gray-300 rounded-lg transition duration-300"
+            value={packName}
+            onChange={(e) => setPackName(e.target.value)}
           />
           <p className="mt-4 text-gray-600">
             Don't want to write your own flashcards? Try our{" "}
@@ -78,6 +109,12 @@ function ManualFlashcard() {
                 <textarea
                   placeholder="Front of card"
                   className="w-full p-3 border border-gray-300 rounded-lg  focus:border-transparent transition duration-300 min-h-[100px]"
+                  value={card.front}
+                  onChange={(e) => {
+                    const newFlashcards = [...flashcards];
+                    newFlashcards[index].front = e.target.value;
+                    setFlashcards(newFlashcards);
+                  }}
                 />
               </div>
               <div className="space-y-2">
@@ -85,17 +122,14 @@ function ManualFlashcard() {
                 <textarea
                   placeholder="Back of card"
                   className="w-full p-3 border border-gray-300 rounded-lg focus:border-transparent transition duration-300 min-h-[100px]"
+                  value={card.back}
+                  onChange={(e) => {
+                    const newFlashcards = [...flashcards];
+                    newFlashcards[index].back = e.target.value;
+                    setFlashcards(newFlashcards);
+                  }}
                 />
               </div>
-            </div>
-            <div className="mt-4 flex justify-between items-center">
-              <button className="text-blue-600 hover:text-blue-800 flex items-center space-x-1">
-                <Image className="w-5 h-5" />
-                <span>Add Image</span>
-              </button>
-              <button className="text-gray-600 hover:text-gray-800">
-                <RotateCw className="w-5 h-5" />
-              </button>
             </div>
           </div>
         ))}

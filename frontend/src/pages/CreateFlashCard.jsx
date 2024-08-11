@@ -1,5 +1,5 @@
 import React from "react";
-import ManualFlashcard from "../components/ManualFlashcard";
+import ManualFlashcard from "../components/CreateFlashCard";
 function CreateFlashCard() {
   return (
     <div className="bg-custom">
