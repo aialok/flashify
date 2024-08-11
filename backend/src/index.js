@@ -7,7 +7,9 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+}));
 
 // Routes : Version 1
 app.use("/api", apiRoutes);

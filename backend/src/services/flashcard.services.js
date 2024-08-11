@@ -1,3 +1,4 @@
+const { where } = require("sequelize");
 const { Flashcard, Pack } = require("../models");
 
 /**
@@ -8,15 +9,22 @@ class FlashcardServices {
   // create a new Flashcard
   async createFlashcard(data) {
     try {
-      const pack = await Pack.findByPk(data.packId);
-      if (!pack) {
-        throw new Error("Pack not found");
+      const checkPackAlreadyExist = await Pack.findOne({
+        where: {
+          name: data.packName,
+        },
+      });
+
+      if (!checkPackAlreadyExist) {
+        var pack = await Pack.create({
+          name: data.packName,
+        });
       }
 
       const flashcard = await Flashcard.create({
         question: data.question,
         answer: data.answer,
-        packId: pack.id,
+        packId: checkPackAlreadyExist ? checkPackAlreadyExist.id : pack.id,
       });
 
       return flashcard;
