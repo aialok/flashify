@@ -15,7 +15,7 @@ function Navbar() {
           </div>
           <nav className="flex items-center space-x-6">
             <Link
-              to="/create"
+              to="/create-flashcard"
               className="text-gray-600 hover:text-blue-600 font-medium"
             >
               Create

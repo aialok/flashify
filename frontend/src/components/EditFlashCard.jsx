@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import useFetchFlashCard from "../hooks/useFetchFlashCard";
+import { toast } from "react-hot-toast";
 
 function EditFlashcardPack() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const {
     flashCards: initialFlashCards,
     loading,
@@ -30,30 +32,37 @@ function EditFlashcardPack() {
   };
 
   const removeFlashcard = async (id) => {
-    // delete this from database
-    const response = await axios.delete(
-      `http://localhost:3000/api/v1/flashcard/${id}`
-    );
-    if (response) {
-      setFlashCards(flashCards.filter((card) => card.id !== id));
-      alert("successfully deleted");
+    try {
+      const response = axios
+        .delete(`http://localhost:3000/api/v1/flashcard/${id}`)
+        .then(() => {
+          setFlashCards(flashCards.filter((card) => card.id !== id));
+        });
+
+      toast.promise(response, {
+        loading: "Deleting flashcard...",
+        success: "Flashcard deleted successfully",
+        error: "Failed to delete flashcard",
+      });
+    } catch (error) {
+      toast.error("Failed to delete flashcard: " + error.message);
     }
   };
 
   const updateHandler = async (e) => {
     e.preventDefault();
 
-    try {
+    const updateProcess = async () => {
       if (!packName) {
         throw new Error("Please fill out the pack name");
       }
 
-      const response = await axios.put(
-        `http://localhost:3000/api/v1/pack/${id}`,
-        { name: packName }
-      );
-      console.log(response);
+      // Update pack name
+      await axios.put(`http://localhost:3000/api/v1/pack/${id}`, {
+        name: packName,
+      });
 
+      // Update flashcards
       const updatePromises = flashCards.map(async (card) => {
         if (!card.question || !card.answer) {
           throw new Error(
@@ -67,10 +76,20 @@ function EditFlashcardPack() {
       });
 
       await Promise.all(updatePromises);
-      alert("Success");
-    } catch (error) {
-      alert("Failed: " + error.message);
-    }
+    };
+
+    toast
+      .promise(updateProcess(), {
+        loading: "Updating flashcard pack...",
+        success: "Flashcard pack updated successfully!",
+        error: (err) => `Update failed: ${err.message}`,
+      })
+      .then(() => {
+        navigate(`/flashcard-pack/${id}`);
+      })
+      .catch((error) => {
+        console.error("Error after toast:", error);
+      });
   };
 
   if (loading) {

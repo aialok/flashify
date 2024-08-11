@@ -1,19 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { Plus, Brain, Pencil, ArrowRight } from "lucide-react";
+import { Plus, Brain, Pencil, ArrowRight, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
+import { toast } from "react-hot-toast";
 const HomePage = () => {
   const [flashcards, setFlashcards] = useState([]);
 
   useEffect(() => {
     document.title = "Flashify - Home";
-    fetch("http://localhost:3000/api/v1/packs")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setFlashcards(data.data);
-      });
+    fetchFlashcards();
   }, []);
+
+  const fetchFlashcards = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/api/v1/packs");
+      setFlashcards(response.data.data);
+    } catch (error) {
+      toast.error("Error fetching flashcards:", error);
+    }
+  };
+
+  const deletePack = async (id) => {
+    try {
+      const response = axios
+        .delete(`http://localhost:3000/api/v1/pack/${id}`)
+        .then(() => fetchFlashcards());
+      toast.promise(response, {
+        loading: "Deleting pack...",
+        success: "Pack deleted successfully",
+        error: "Failed to delete pack",
+      });
+    } catch (error) {
+      toast.error("Failed to delete pack : " + error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen text-gray-800 bg-gray-100">
@@ -65,19 +85,29 @@ const HomePage = () => {
             </button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {flashcards.map((deck, index) => (
-              <Link
-                to={`/flashcard-pack/${index + 1}`}
-                key={index}
-                className="bg-white border rounded-xl p-6 hover:shadow-lg transition duration-300 cursor-pointer"
+            {flashcards.map((deck) => (
+              <div
+                key={deck.id}
+                className="bg-white border rounded-xl p-6 hover:shadow-lg transition duration-300"
               >
                 <h3 className="font-semibold text-xl mb-2">{deck.name}</h3>
-                <p className="text-gray-600 mb-4">20 cards</p>
+                <p className="text-gray-600 mb-4">
+                  {deck.flashcards?.length || 0} cards
+                </p>
                 <div className="flex justify-between items-center text-blue-600">
-                  <span>View Pack</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <Link to={`/flashcard-pack/${deck.id}`}>
+                    <span className="flex items-center">
+                      View Pack <ArrowRight className="w-5 h-5 ml-2" />
+                    </span>
+                  </Link>
+                  <button
+                    onClick={() => deletePack(deck.id)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </section>
