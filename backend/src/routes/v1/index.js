@@ -1,4 +1,10 @@
 const router = require("express").Router();
+const {
+  createPack,
+  deletePack,
+  getAllPacks,
+  updatePack,
+} = require("../../controllers/pack.controller.js");
 
 const {
   createFlashcard,
@@ -8,6 +14,8 @@ const {
   getAllFlashcards,
   getAllFlashcardsByPackId,
 } = require("../../controllers/flashcard.controller.js");
+
+// Flashcard routes
 
 /**
  * @route POST /create-flashcard
@@ -44,5 +52,32 @@ router.get("/flashcards", getAllFlashcards);
  * @description Get all flashcards by pack id
  */
 router.get("/flashcards/pack/:id", getAllFlashcardsByPackId);
+
+
+// Pack routes
+
+/**
+ * @route POST /pack
+ * @description Create a new pack
+ */
+router.post("/pack", createPack);
+
+/**
+ * @route Delete /pack/:id
+ * @description Delete a pack
+ */
+router.delete("/pack/:id", deletePack);
+
+/**
+ * @route GET /packs
+ * @description Get all packs
+ */
+router.get("/packs", getAllPacks);
+
+/**
+ * @route PUT /pack/:id
+ * @description Update a pack
+ */
+router.put("/pack/:id", updatePack);
 
 module.exports = router;

@@ -8,9 +8,10 @@ class FlashcardServices {
   // create a new Flashcard
   async createFlashcard(data) {
     try {
-      const pack = await Pack.create({
-        name: data.packName,
-      });
+      const pack = await Pack.findByPk(data.packId);
+      if (!pack) {
+        throw new Error("Pack not found");
+      }
 
       const flashcard = await Flashcard.create({
         question: data.question,
@@ -114,7 +115,6 @@ class FlashcardServices {
       throw new Error(error.message);
     }
   }
-
 }
 
 module.exports = new FlashcardServices();
