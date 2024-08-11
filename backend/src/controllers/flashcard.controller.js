@@ -73,7 +73,9 @@ const getAllFlashcards = async (req, res) => {
 
 const getFlashcardById = async (req, res) => {
   try {
-    const flashcard = await flashcardsServices.getSingleFlashcard(req.params.id);
+    const flashcard = await flashcardsServices.getSingleFlashcard(
+      req.params.id
+    );
     return res.status(200).json({
       message: "Fetched FlashCard Successfully",
       success: true,
@@ -113,5 +115,5 @@ module.exports = {
   deleteFlashcard,
   getAllFlashcards,
   getFlashcardById,
-  getAllFlashcardsByPackId
+  getAllFlashcardsByPackId,
 };

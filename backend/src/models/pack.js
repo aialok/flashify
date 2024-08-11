@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Pack.hasMany(models.Flashcard, { foreignKey: "packId" });
+      Pack.hasMany(models.Flashcard, {
+        foreignKey: "packId",
+        onDelete: "CASCADE",
+      });
     }
   }
   Pack.init(
