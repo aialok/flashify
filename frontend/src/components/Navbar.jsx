@@ -15,12 +15,6 @@ function Navbar() {
           </div>
           <nav className="flex items-center space-x-6">
             <Link
-              to="/my-cards"
-              className="text-gray-600 hover:text-blue-600 font-medium"
-            >
-              My Cards
-            </Link>
-            <Link
               to="/create"
               className="text-gray-600 hover:text-blue-600 font-medium"
             >
@@ -28,7 +22,7 @@ function Navbar() {
             </Link>
             <Link
               to="/ai-generator"
-              className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-1"
+              className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-1 max-sm:hidden"
             >
               <Plus className="w-5 h-5" />
               <span>AI Generator</span>
