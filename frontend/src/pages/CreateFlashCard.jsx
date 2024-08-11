@@ -1,11 +1,11 @@
-import React from 'react'
-
+import React from "react";
+import ManualFlashcard from "../components/ManualFlashcard";
 function CreateFlashCard() {
   return (
-    <div>
-        
+    <div className="bg-custom">
+      <ManualFlashcard />
     </div>
-  )
+  );
 }
 
-export default CreateFlashCard
+export default CreateFlashCard;

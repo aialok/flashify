@@ -5,7 +5,19 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+
+    },
+    fontFamily:{
+      Roboto: ['Roboto', 'sans-serif'],
+    },
+    backgroundColor: theme => ({
+      ...theme('colors'),
+      'primary': '#3490dc',
+      'secondary': '#ffed4a',
+      'danger': '#e3342f',
+      'custom': '#F4F5FC',
+     })
   },
   plugins: [],
 }
