@@ -1,8 +1,8 @@
-const aiFlashCardGeneratorService = require("../services/ai-flashcard-generator.services.mjs");
+const aiFlashCardGeneratorService = require("../services/ai-flashcard-generator.services.cjs");
 
 const generateAIFlashCard = async (req, res) => {
   try {
-    const flashcard = await aiFlashCardGeneratorService.generateAIFlashCard(
+    const flashcard = await aiFlashCardGeneratorService.createFlashCardWithAI(
       req.body.prompt
     );
     return res.status(200).json({

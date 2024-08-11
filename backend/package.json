@@ -6,7 +6,7 @@
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js --env-file .env",
+    "dev": "nodemon --env-file=.env src/index.js",
     "start": "node src/index.js --env-file .env"
   },
   "keywords": [],

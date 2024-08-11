@@ -1,10 +1,11 @@
-import { z } from "zod";
-import { zodResponseFormat } from "openai/helpers/zod";
-import OpenAI from "openai";
-import flashcardServices from "./flashcard.services";
+const { z } = require("zod");
+const { zodResponseFormat } = require("openai/helpers/zod");
+const OpenAI = require("openai");
+const flashcardServices = require("./flashcard.services");
+
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.OPEN_AI_API_KEY,
 });
 
 const FlashCardSchema = z.object({
@@ -77,6 +78,6 @@ async function createFlashCardWithAI(prompt) {
   }
 }
 
-export default {
+module.exports = {
   createFlashCardWithAI,
 };
