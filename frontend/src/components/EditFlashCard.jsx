@@ -103,10 +103,10 @@ function EditFlashcardPack() {
       <header className="bg-white rounded-lg shadow-md p-6 mb-8 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <Pencil className="w-6 h-6 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-800">Edit Flashcards</h1>
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-800">Edit Flashcards</h1>
         </div>
         <button
-          className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2"
+          className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2 text-sm sm:text-lg"
           onClick={updateHandler}
         >
           <span>Update Pack</span>
