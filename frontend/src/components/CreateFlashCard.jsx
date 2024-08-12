@@ -28,7 +28,7 @@ function ManualFlashcard() {
         throw new Error("Please fill out all fields");
       }
       const response = await axios.post(
-        "http://localhost:3000/api/v1/flashcard",
+        `${import.meta.env.VITE_BACKEND_URI}/api/v1/flashcard`,
         {
           packName,
           question: card.front,

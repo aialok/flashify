@@ -22,7 +22,7 @@ function AIFlashcardGenerator() {
     try {
       if (activeTab === "text") {
         const response = axios
-          .post("http://localhost:3000/api/v1/generate-ai", {
+          .post(`${import.meta.env.VITE_BACKEND_URI}/api/v1/generate-ai`, {
             prompt,
           })
           .then((response) => {

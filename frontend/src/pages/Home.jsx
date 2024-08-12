@@ -16,7 +16,7 @@ const HomePage = () => {
   const fetchFlashcards = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:3000/api/v1/packs");
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/v1/packs`);
       setFlashcards(response.data.data);
     } catch (error) {
       toast.error("Error fetching flashcards:", error);
@@ -28,7 +28,7 @@ const HomePage = () => {
   const deletePack = async (id) => {
     try {
       const response = axios
-        .delete(`http://localhost:3000/api/v1/pack/${id}`)
+        .delete(`${import.meta.env.VITE_BACKEND_URI}/api/v1/pack/${id}`)
         .then(() => fetchFlashcards());
       toast.promise(response, {
         loading: "Deleting pack...",

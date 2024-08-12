@@ -35,7 +35,7 @@ function EditFlashcardPack() {
   const removeFlashcard = async (id) => {
     try {
       const response = axios
-        .delete(`http://localhost:3000/api/v1/flashcard/${id}`)
+        .delete(`${import.meta.env.VITE_BACKEND_URI}/api/v1/flashcard/${id}`)
         .then(() => {
           setFlashCards(flashCards.filter((card) => card.id !== id));
         });
@@ -59,7 +59,7 @@ function EditFlashcardPack() {
       }
 
       // Update pack name
-      await axios.put(`http://localhost:3000/api/v1/pack/${id}`, {
+      await axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/v1/pack/${id}`, {
         name: packName,
       });
 
@@ -70,7 +70,7 @@ function EditFlashcardPack() {
             `Please fill out all fields for flashcard ${card.id}`
           );
         }
-        return axios.put(`http://localhost:3000/api/v1/flashcard/${card.id}`, {
+        return axios.put(`${import.meta.env.VITE_BACKEND_URI}/api/v1/flashcard/${card.id}`, {
           question: card.question,
           answer: card.answer,
           packId: id,

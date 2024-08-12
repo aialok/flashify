@@ -10,7 +10,7 @@ const useFetchFlashCard = (id) => {
     const fetchFlashCards = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/v1/flashcards/pack/${id}`
+          `${import.meta.env.VITE_BACKEND_URI}/api/v1/flashcards/pack/${id}`
         );
 
         const cardsData = response.data.data.map((card) => {
@@ -24,7 +24,7 @@ const useFetchFlashCard = (id) => {
         if (cardsData.length == 0) {
           // Fetch Pack Name
           const packName = await axios.get(
-            `http://localhost:3000/api/v1/pack/${id}`
+            `${import.meta.env.VITE_BACKEND_URI}/api/v1/pack/${id}`
           );
           setPackName(packName.data.data.name);
           return;
