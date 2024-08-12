@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Plus, Brain, Pencil, ArrowRight, Trash2 } from "lucide-react";
+import { Brain, Pencil, ArrowRight, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -16,7 +16,9 @@ const HomePage = () => {
   const fetchFlashcards = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URI}/api/v1/packs`);
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URI}/api/v1/packs`
+      );
       setFlashcards(response.data.data);
     } catch (error) {
       toast.error("Error fetching flashcards:", error);
@@ -84,10 +86,6 @@ const HomePage = () => {
             <h2 className="text-3xl font-bold text-gray-900">
               Recent Flashcards
             </h2>
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2">
-              <Plus className="w-5 h-5" />
-              <span>New Set</span>
-            </button>
           </div>
           {loading ? (
             <Loader />
