@@ -7,9 +7,11 @@ const app = express();
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-  origin: "http://localhost:5173",
-}));
+app.use(
+  cors({
+    origin: ["https://flashify.pages.dev/", "http://localhost:5173"],
+  })
+);
 
 // Routes : Version 1
 app.use("/api", apiRoutes);
@@ -25,7 +27,7 @@ app.get("/health", (req, res) => {
 app.use((req, res, next) => {
   res.status(404).json({
     message: "Resource not found",
-    success: false, 
+    success: false,
     status: 404,
   });
 });
