@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --env-file=.env src/index.js",
-    "start": "node src/index.js --env-file .env"
+    "start": "node --env-file=.env src/index.js"
   },
   "keywords": [],
   "author": "",
