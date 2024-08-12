@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Upload, FileText, Image, Settings, ArrowRight } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import Loader from "./Loader";
 import axios from "axios";
 
 function AIFlashcardGenerator() {
   const [activeTab, setActiveTab] = useState("text");
   const [prompt, setPrompt] = useState("");
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const tabs = [
     { id: "text", label: "Text", icon: FileText },
@@ -17,6 +18,7 @@ function AIFlashcardGenerator() {
   ];
 
   const generateFlashCardHandler = async () => {
+    setLoading(true);
     try {
       if (activeTab === "text") {
         const response = axios
@@ -25,7 +27,9 @@ function AIFlashcardGenerator() {
           })
           .then((response) => {
             navigate(`/flashcard-pack/${response.data.data}`);
+            setLoading(false);
           });
+
         toast.promise(response, {
           loading: "Generating flashcards...",
           success: "Flashcards generated successfully",
@@ -34,8 +38,14 @@ function AIFlashcardGenerator() {
       }
     } catch (error) {
       toast.error("Failed to generate flashcards: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">

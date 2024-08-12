@@ -9,14 +9,26 @@ const useFetchFlashCard = (id) => {
   useEffect(() => {
     const fetchFlashCards = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/flashcards/pack/${id}`);
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/flashcards/pack/${id}`
+        );
+
         const cardsData = response.data.data.map((card) => {
           return {
             question: card.question,
             answer: card.answer,
-            id: card.id
+            id: card.id,
           };
         });
+
+        if (cardsData.length == 0) {
+          // Fetch Pack Name
+          const packName = await axios.get(
+            `http://localhost:3000/api/v1/pack/${id}`
+          );
+          setPackName(packName.data.data.name);
+          return;
+        }
 
         setPackName(response.data.data[0].Pack.name);
         setFlashCards(cardsData);

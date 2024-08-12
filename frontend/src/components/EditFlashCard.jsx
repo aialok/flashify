@@ -4,6 +4,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import useFetchFlashCard from "../hooks/useFetchFlashCard";
 import { toast } from "react-hot-toast";
+import Loader from "./Loader";
 
 function EditFlashcardPack() {
   const { id } = useParams();
@@ -72,6 +73,7 @@ function EditFlashcardPack() {
         return axios.put(`http://localhost:3000/api/v1/flashcard/${card.id}`, {
           question: card.question,
           answer: card.answer,
+          packId: id,
         });
       });
 
@@ -93,7 +95,7 @@ function EditFlashcardPack() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   return (

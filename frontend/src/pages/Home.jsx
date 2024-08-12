@@ -3,8 +3,10 @@ import { Plus, Brain, Pencil, ArrowRight, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import Loader from "../components/Loader";
 const HomePage = () => {
   const [flashcards, setFlashcards] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     document.title = "Flashify - Home";
@@ -13,10 +15,13 @@ const HomePage = () => {
 
   const fetchFlashcards = async () => {
     try {
+      setLoading(true);
       const response = await axios.get("http://localhost:3000/api/v1/packs");
       setFlashcards(response.data.data);
     } catch (error) {
       toast.error("Error fetching flashcards:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,32 +89,36 @@ const HomePage = () => {
               <span>New Set</span>
             </button>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {flashcards.map((deck) => (
-              <div
-                key={deck.id}
-                className="bg-white border rounded-xl p-6 hover:shadow-lg transition duration-300"
-              >
-                <h3 className="font-semibold text-xl mb-2">{deck.name}</h3>
-                <p className="text-gray-600 mb-4">
-                  {deck.flashcards?.length || 0} cards
-                </p>
-                <div className="flex justify-between items-center text-blue-600">
-                  <Link to={`/flashcard-pack/${deck.id}`}>
-                    <span className="flex items-center">
-                      View Pack <ArrowRight className="w-5 h-5 ml-2" />
-                    </span>
-                  </Link>
-                  <button
-                    onClick={() => deletePack(deck.id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
+          {loading ? (
+            <Loader />
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {flashcards.map((deck) => (
+                <div
+                  key={deck.id}
+                  className="bg-white border rounded-xl p-6 hover:shadow-lg transition duration-300"
+                >
+                  <h3 className="font-semibold text-xl mb-2">{deck.name}</h3>
+                  <p className="text-gray-600 mb-4">
+                    {deck.flashcards?.length || 0} cards
+                  </p>
+                  <div className="flex justify-between items-center text-blue-600">
+                    <Link to={`/flashcard-pack/${deck.id}`}>
+                      <span className="flex items-center">
+                        View Pack <ArrowRight className="w-5 h-5 ml-2" />
+                      </span>
+                    </Link>
+                    <button
+                      onClick={() => deletePack(deck.id)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       </main>
     </div>

@@ -2,15 +2,14 @@ import React, { useState, useEffect } from "react";
 import { ArrowLeft, ArrowRight, RotateCw, Pencil } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import FlashcardComponent from "./FlipCardComponent";
-import axios from "axios";
 import useFetchFlashCard from "../hooks/useFetchFlashCard";
+import Loader from "./Loader";
 
 const FlashcardPackPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [currentCard, setCurrentCard] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  // const [packName, setPackName] = useState("");
   const { flashCards, loading, packName } = useFetchFlashCard(id);
 
   const nextCard = () => {
@@ -28,6 +27,10 @@ const FlashcardPackPage = () => {
   const handleEditPack = () => {
     navigate(`/edit-pack/${id}`);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-4">
@@ -52,8 +55,8 @@ const FlashcardPackPage = () => {
                 ? flashCards
                 : [
                     {
-                      question: "alok",
-                      answer: "alok",
+                      question: "No Flashcards found",
+                      answer: "Please, add some flashcards to this pack",
                     },
                   ]
             }
@@ -63,6 +66,7 @@ const FlashcardPackPage = () => {
             <button
               onClick={prevCard}
               className="text-blue-600 hover:text-blue-800"
+              disabled={flashCards.length === 0}
             >
               <ArrowLeft className="w-6 h-6" />
             </button>
@@ -72,6 +76,7 @@ const FlashcardPackPage = () => {
             <button
               onClick={nextCard}
               className="text-blue-600 hover:text-blue-800"
+              disabled={flashCards.length === 0}
             >
               <ArrowRight className="w-6 h-6" />
             </button>
