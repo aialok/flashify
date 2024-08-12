@@ -66,8 +66,6 @@ class PackServices {
       // Check if data is present in Redis
       const cacheData = await redis.get("packs");
       if (cacheData) {
-        console.log("cached data");
-        console.log(JSON.parse(cacheData));
         return JSON.parse(cacheData);
       }
       const packs = await Pack.findAll();

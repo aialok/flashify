@@ -1,4 +1,4 @@
-const { where } = require("sequelize");
+const { sequelize } = require("../models");
 const { Flashcard, Pack } = require("../models");
 const redis = require("../config/redis.config");
 
@@ -9,35 +9,35 @@ const redis = require("../config/redis.config");
 class FlashcardServices {
   // create a new Flashcard
   async createFlashcard(data) {
+    const t = await sequelize.transaction();
     try {
-      // delete the cache
+      const [pack, created] = await Pack.findOrCreate({
+        where: { name: data.packName.trim() },
+        defaults: { name: data.packName.trim() },
+        transaction: t,
+        lock: t.LOCK.UPDATE, // Add a lock to prevent concurrent modifications
+      });
+
+      const flashcard = await Flashcard.create(
+        {
+          question: data.question,
+          answer: data.answer,
+          packId: pack.id,
+        },
+        { transaction: t }
+      );
+
       await redis.del("packs");
 
-      const checkPackAlreadyExist = await Pack.findOne({
-        where: {
-          name: data.packName,
-        },
-      });
-
-      if (!checkPackAlreadyExist) {
-        var pack = await Pack.create({
-          name: data.packName,
-        });
-      }
-
-      const flashcard = await Flashcard.create({
-        question: data.question,
-        answer: data.answer,
-        packId: checkPackAlreadyExist ? checkPackAlreadyExist.id : pack.id,
-      });
-
+      await t.commit();
       return flashcard;
     } catch (error) {
+      await t.rollback();
       console.log(
         "There is an error in creating a flashcard : service layer",
         error
       );
-      throw new Error(error.message);
+      throw error;
     }
   }
 
@@ -73,9 +73,6 @@ class FlashcardServices {
       const deletedFlashcard = await Flashcard.destroy({
         where: { id: flashCardId },
       });
-
-      console.log("deletedFlashcard", deletedFlashcard);
-      // await redis.del(`packId/${packId}`);
 
       return deletedFlashcard;
     } catch (error) {
@@ -127,8 +124,6 @@ class FlashcardServices {
       const cacheData = await redis.get(`packId/${packId}`);
 
       if (cacheData) {
-        console.log("cached data");
-        console.log(JSON.parse(cacheData));
         return JSON.parse(cacheData);
       }
 

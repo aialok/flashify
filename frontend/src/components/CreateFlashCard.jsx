@@ -20,32 +20,47 @@ function ManualFlashcard() {
     setFlashcards(flashcards.filter((card) => card.id !== id));
   };
 
-  const onSavePackHandler = (e) => {
+  const onSavePackHandler = async (e) => {
     e.preventDefault();
 
-    const promises = flashcards.map(async (card) => {
-      if (!card.front || !card.back || !packName) {
-        throw new Error("Please fill out all fields");
+    try {
+      if (!packName) {
+        throw new Error("Please enter a pack name");
       }
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URI}/api/v1/flashcard`,
-        {
-          packName,
-          question: card.front,
-          answer: card.back,
-        }
-      );
-      console.log(response.data);
-      return response.data;
-    });
 
-    Promise.all(promises)
-      .then(() => {
-        alert("Success");
-      })
-      .catch((error) => {
-        alert("Failed: " + error.message);
+      const promises = flashcards.map(async (card, index) => {
+        if (!card.front || !card.back) {
+          throw new Error(`Please fill out all fields for card ${index + 1}`);
+        }
+        const response = await axios.post(
+          `${import.meta.env.VITE_BACKEND_URI}/api/v1/flashcard`,
+          {
+            packName,
+            question: card.front,
+            answer: card.back,
+          }
+        );
+        console.log(response.data);
+        return response.data;
       });
+
+      await Promise.all(promises);
+      toast.message("Success");
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        alert(
+          `Failed: ${error.response.data.message || error.response.statusText}`
+        );
+      } else if (error.request) {
+        // The request was made but no response was received
+        alert("Failed: No response received from server");
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        alert("Failed: " + error.message);
+      }
+    }
   };
 
   return (
