@@ -1,5 +1,6 @@
 const { where } = require("sequelize");
 const { Flashcard, Pack } = require("../models");
+const redis = require("../config/redis.config");
 
 /**
  * FlashcardServices Class to handle all the services related to Flashcards
@@ -9,6 +10,9 @@ class FlashcardServices {
   // create a new Flashcard
   async createFlashcard(data) {
     try {
+      // delete the cache
+      await redis.del("packs");
+
       const checkPackAlreadyExist = await Pack.findOne({
         where: {
           name: data.packName,
@@ -40,6 +44,15 @@ class FlashcardServices {
   // update a Flashcard
   async updateFlashcard(flashCardId, data) {
     try {
+      // check flashcard already exist or not
+      const checkFlashcardExist = await Flashcard.findByPk(flashCardId);
+
+      if (!checkFlashcardExist) {
+        // create a new flashcard
+        const newFlashcard = await Flashcard.create(data);
+        return newFlashcard;
+      }
+
       const updatedFlashcard = await Flashcard.update(data, {
         where: { id: flashCardId },
       });
@@ -60,6 +73,9 @@ class FlashcardServices {
       const deletedFlashcard = await Flashcard.destroy({
         where: { id: flashCardId },
       });
+
+      console.log("deletedFlashcard", deletedFlashcard);
+      // await redis.del(`packId/${packId}`);
 
       return deletedFlashcard;
     } catch (error) {
@@ -105,14 +121,27 @@ class FlashcardServices {
     }
   }
 
-  getAllFlashcardsByPackId(packId) {
+  async getAllFlashcardsByPackId(packId) {
     try {
-      const flashcards = Flashcard.findAll({
+      // check if data is present in Redis
+      const cacheData = await redis.get(`packId/${packId}`);
+
+      if (cacheData) {
+        console.log("cached data");
+        console.log(JSON.parse(cacheData));
+        return JSON.parse(cacheData);
+      }
+
+      const flashcards = await Flashcard.findAll({
         where: {
           packId: packId,
         },
         include: Pack,
       });
+
+      // cached the data
+
+      await redis.set(`packId/${packId}`, JSON.stringify(flashcards));
 
       return flashcards;
     } catch (error) {

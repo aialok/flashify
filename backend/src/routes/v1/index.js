@@ -13,6 +13,7 @@ const {
   deletePack,
   getAllPacks,
   updatePack,
+  getPackById
 } = require("../../controllers/pack.controller.js");
 
 const {
@@ -82,6 +83,13 @@ router.get("/packs", getAllPacks);
  * @description Update a pack
  */
 router.put("/pack/:id", updatePack);
+
+/**
+ * @route GET /pack/:id
+ */
+router.get("/pack/:id", getPackById);
+
+
 
 // AI Flashcard Generator routes
 

@@ -68,4 +68,24 @@ const getAllPacks = async (req, res) => {
   }
 };
 
-module.exports = { createPack, updatePack, deletePack, getAllPacks };
+const getPackById = async (req, res) => {
+  try {
+    const pack = await packServices.getPackById(req.params.id);
+    return res.status(200).json({
+      message: "Pack fetched successfully",
+      success: true,
+      data: pack,
+    });
+  } catch (error) {
+    console.log("There is an error in fetching pack : controller layer", error); // For debugging purposes
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
+module.exports = {
+  createPack,
+  updatePack,
+  deletePack,
+  getAllPacks,
+  getPackById,
+};

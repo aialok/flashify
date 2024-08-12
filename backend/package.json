@@ -16,6 +16,7 @@
     "@instructor-ai/instructor": "^1.5.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "ioredis": "^5.4.1",
     "mysql2": "^3.11.0",
     "openai": "^4.55.4",
     "sequelize": "^6.37.3",
