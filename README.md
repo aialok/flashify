@@ -82,6 +82,19 @@ git clone https://github.com/aialok/flashify.git
 
 ### Wohoo ! congrats you are done with setup  :)
   
+### Screenshots
+Homepage
+![image](https://github.com/user-attachments/assets/fbd9549f-a790-4861-bc0e-b20323b10d9d)
+Create Flashcards
+![image](https://github.com/user-attachments/assets/ec26b01c-68cb-4df1-937f-3e216b066b85)
+FlashCard Views
+![image](https://github.com/user-attachments/assets/a76cf77b-067c-41d3-85d8-367ea2150614)
+Edit Flashcards
+![image](https://github.com/user-attachments/assets/afb7ff31-2ad0-4e97-896a-8826ee139720)
+Generate with AI
+![image](https://github.com/user-attachments/assets/da3bc184-30a6-4dc5-88e9-3faa4e9ecbd8)
+
+
 
 
 
