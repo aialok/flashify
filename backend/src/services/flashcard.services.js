@@ -18,7 +18,7 @@ class FlashcardServices {
         lock: t.LOCK.UPDATE, // Add a lock to prevent concurrent modifications
       });
 
-      const flashcard = await Flashcard.create(
+      await Flashcard.create(
         {
           question: data.question,
           answer: data.answer,
@@ -30,7 +30,7 @@ class FlashcardServices {
       await redis.del("packs");
 
       await t.commit();
-      return flashcard;
+      return pack.id;
     } catch (error) {
       await t.rollback();
       console.log(
@@ -56,7 +56,7 @@ class FlashcardServices {
       const updatedFlashcard = await Flashcard.update(data, {
         where: { id: flashCardId },
       });
-
+     
       return updatedFlashcard;
     } catch (error) {
       console.log(
@@ -142,6 +142,30 @@ class FlashcardServices {
     } catch (error) {
       console.log(
         "There is an error in getting all flashcards by packId : service layer",
+        error
+      );
+      throw new Error(error.message);
+    }
+  }
+
+  async getPackLength(id) {
+    try {
+      const cacheData = await redis.get(`pack_length:${id}`);
+
+      if (cacheData) {
+        return parseInt(cacheData, 10);
+      }
+
+      const packLength = await Flashcard.count({
+        where: { packId: id },
+      });
+
+      await redis.set(`pack_length:${id}`, packLength);
+
+      return packLength;
+    } catch (error) {
+      console.log(
+        "There is an error in getting pack length : service layer",
         error
       );
       throw new Error(error.message);

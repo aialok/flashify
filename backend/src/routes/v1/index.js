@@ -6,6 +6,7 @@ const {
   updateFlashcard,
   getAllFlashcards,
   getAllFlashcardsByPackId,
+  getPackLength,
 } = require("../../controllers/flashcard.controller.js");
 
 const {
@@ -88,6 +89,12 @@ router.put("/pack/:id", updatePack);
  * @route GET /pack/:id
  */
 router.get("/pack/:id", getPackById);
+
+/**
+ * @route GET /pack-length/
+ * @description Get the number of flashcards in a pack
+ */
+router.get("/pack-length/:id", getPackLength);
 
 // AI Flashcard Generator routes
 

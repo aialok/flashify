@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import { Pencil, Trash2 } from "lucide-react";
 import axios from "axios";
+import { toast } from "react-hot-toast";
+import { useNavigate, Link } from "react-router-dom";
 
-function ManualFlashcard() {
+function CreateFlashCard() {
   const [flashcards, setFlashcards] = useState([
     { id: 1, front: "", back: "" },
     { id: 2, front: "", back: "" },
-    { id: 3, front: "", back: "" },
   ]);
+
+  const navigate = useNavigate();
 
   const [packName, setPackName] = useState("");
 
@@ -23,44 +26,49 @@ function ManualFlashcard() {
   const onSavePackHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      if (!packName) {
-        throw new Error("Please enter a pack name");
-      }
+    if (!packName.trim()) {
+      toast.error("Please enter a pack name");
+      return;
+    }
 
-      const promises = flashcards.map(async (card, index) => {
-        if (!card.front || !card.back) {
-          throw new Error(`Please fill out all fields for card ${index + 1}`);
-        }
+    const createFlashcard = async (card, index) => {
+      if (!card.front.trim() || !card.back.trim()) {
+        throw new Error(`Please fill out all fields for card ${index + 1}`);
+      }
+      try {
         const response = await axios.post(
           `${import.meta.env.VITE_BACKEND_URI}/api/v1/flashcard`,
           {
-            packName,
-            question: card.front,
-            answer: card.back,
+            packName: packName.trim(),
+            question: card.front.trim(),
+            answer: card.back.trim(),
           }
         );
         console.log(response.data);
         return response.data;
-      });
-
-      await Promise.all(promises);
-      toast.message("Success");
-    } catch (error) {
-      if (error.response) {
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        alert(
-          `Failed: ${error.response.data.message || error.response.statusText}`
-        );
-      } else if (error.request) {
-        // The request was made but no response was received
-        alert("Failed: No response received from server");
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        alert("Failed: " + error.message);
+      } catch (error) {
+        console.error(`Error creating flashcard ${index + 1}:`, error);
+        throw error;
       }
-    }
+    };
+
+    const createAllFlashcards = async () => {
+      const results = await Promise.all(
+        flashcards.map((card, index) => createFlashcard(card, index))
+      );
+      return results[0];
+    };
+
+    toast.promise(
+      createAllFlashcards().then((res) => {
+        navigate(`/flashcard-pack/${res.data}`);
+      }),
+      {
+        loading: "Creating flashcards...",
+        success: "Flashcards created successfully",
+        error: "Error creating flashcards",
+      }
+    );
   };
 
   return (
@@ -68,12 +76,12 @@ function ManualFlashcard() {
       <header className="bg-white rounded-lg shadow-md p-6 mb-8 flex justify-between items-center">
         <div className="flex items-center space-x-3">
           <Pencil className="w-6 h-6 text-blue-600" />
-          <h1 className="text-3xl font-bold text-gray-800">
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-800">
             Create Flashcards
           </h1>
         </div>
         <button
-          className="bg-blue-600 text-white font-semibold py-2 px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2"
+          className="bg-blue-600 text-white font-semibold py-2 px-4 sm:px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2 text-sm sm:text-base"
           onClick={onSavePackHandler}
         >
           <span>Save Pack</span>
@@ -98,9 +106,9 @@ function ManualFlashcard() {
           />
           <p className="mt-4 text-gray-600">
             Don't want to write your own flashcards? Try our{" "}
-            <span className="text-blue-600 font-semibold">
+            <Link to="/ai-generator" className="text-blue-600 font-semibold">
               AI Flashcard Generator
-            </span>{" "}
+            </Link>{" "}
             to instantly transform your notes or documents into flashcards.
           </p>
         </div>
@@ -160,4 +168,4 @@ function ManualFlashcard() {
   );
 }
 
-export default ManualFlashcard;
+export default CreateFlashCard;

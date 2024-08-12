@@ -26,6 +26,7 @@ class PackServices {
     try {
       await redis.del("packs");
       await redis.del(`packId/${packId}`);
+      await redis.del(`pack_length:${packId}`);
       const updatedPack = await Pack.update(data, {
         where: { id: packId },
       });

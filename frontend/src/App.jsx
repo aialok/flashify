@@ -1,5 +1,5 @@
 import HomePage from "./pages/Home";
-import CreateFlashCard from "./pages/CreateFlashCard";
+import CreateFlashCard from "./components/CreateFlashCard";
 import { Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
 import FlipCardComponent from "./components/FlipCardComponent";

@@ -94,7 +94,7 @@ function AIFlashcardGenerator() {
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
                 <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500">
-                  Drag and drop a document or click to upload
+                  Coming soon! Upload a document to generate flashcards
                 </p>
               </div>
             )}
@@ -102,14 +102,14 @@ function AIFlashcardGenerator() {
               <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
                 <Image className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500">
-                  Drag and drop an image or click to upload
+                  Coming soon! Upload an image or video to generate flashcards
                 </p>
               </div>
             )}
           </div>
 
           <div className="flex justify-between items-center">
-            <p className="text-sm text-gray-500">0/20,000 characters</p>
+            <p className="text-sm text-gray-500">{prompt.length}/10,000</p>
             <button
               className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition duration-300 flex items-center"
               onClick={generateFlashCardHandler}

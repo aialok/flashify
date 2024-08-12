@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Brain, Pencil, ArrowRight, Trash2 } from "lucide-react";
+import { Brain, Pencil, ArrowRight, Trash2, Plus } from "lucide-react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
@@ -19,9 +19,21 @@ const HomePage = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_BACKEND_URI}/api/v1/packs`
       );
-      setFlashcards(response.data.data);
+
+      const flashcardsWithLength = await Promise.all(
+        response.data.data.map(async (pack) => {
+          const packLengthResponse = await axios.get(
+            `${import.meta.env.VITE_BACKEND_URI}/api/v1/pack-length/${pack.id}`
+          );
+          return { ...pack, length: packLengthResponse.data.data };
+        })
+      );
+
+      console.log(flashcardsWithLength);
+      setFlashcards(flashcardsWithLength);
     } catch (error) {
-      toast.error("Error fetching flashcards:", error);
+      console.error("Error fetching flashcards:", error);
+      toast.error(error.response?.data?.message || "Error fetching flashcards");
     } finally {
       setLoading(false);
     }
@@ -83,9 +95,13 @@ const HomePage = () => {
 
         <section>
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-900">
+            <h2 className="text-xl sm:text-3xl font-bold text-gray-900">
               Recent Flashcards
             </h2>
+            <button className="bg-blue-600 text-white font-semibold py-2 px-4 sm:px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2 text-sm sm:text-base">
+              <Plus className="w-5 h-5" />
+              <span>New Set</span>
+            </button>
           </div>
           {loading ? (
             <Loader />
@@ -97,9 +113,7 @@ const HomePage = () => {
                   className="bg-white border rounded-xl p-6 hover:shadow-lg transition duration-300"
                 >
                   <h3 className="font-semibold text-xl mb-2">{deck.name}</h3>
-                  <p className="text-gray-600 mb-4">
-                    {deck.flashcards?.length || 0} cards
-                  </p>
+                  <p className="text-gray-600 mb-4">{deck.length || 0} cards</p>
                   <div className="flex justify-between items-center text-blue-600">
                     <Link to={`/flashcard-pack/${deck.id}`}>
                       <span className="flex items-center">

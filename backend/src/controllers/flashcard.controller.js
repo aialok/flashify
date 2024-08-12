@@ -2,6 +2,7 @@ const flashcardsServices = require("../services/flashcard.services");
 
 const createFlashcard = async (req, res) => {
   try {
+    console.log("req.body", req.body);
     const flashcard = await flashcardsServices.createFlashcard(req.body);
     return res.status(201).json({
       message: "Flashcard created successfully",
@@ -109,6 +110,23 @@ const getAllFlashcardsByPackId = async (req, res) => {
   }
 };
 
+const getPackLength = async (req, res) => {
+  try {
+    const packLength = await flashcardsServices.getPackLength(req.params.id);
+    return res.status(200).json({
+      message: "Fetched FlashCard Successfully",
+      success: true,
+      data: packLength,
+    });
+  } catch (error) {
+    console.log(
+      "There is an error in getting a flashcard : controller layer",
+      error
+    ); // For debugging purposes
+    return res.status(500).json({ message: error.message, success: false });
+  }
+};
+
 module.exports = {
   createFlashcard,
   updateFlashcard,
@@ -116,4 +134,5 @@ module.exports = {
   getAllFlashcards,
   getFlashcardById,
   getAllFlashcardsByPackId,
+  getPackLength
 };
