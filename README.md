@@ -4,16 +4,16 @@
 
 Flashify is a powerful web application designed to create and manage flashcards, enhancing learning and memorization processes.
 
-🚀 [Live Demo](https://flashify.pages.dev/)
+[Live Demo](https://flashify.pages.dev/)
 
-## 🌟 Key Features
+## Key Features
 
 - **AI-Powered Flashcard Creation**: Put your text and generate question and answer flashcards
 - **Manual Creation Option**: Create your manual cards
 - **Flashcard Management**:Easily view and edit your flashcards
 - **Intuitive User Interface**: Easy navigation and user-friendly experience
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 - React with Vite 
@@ -40,6 +40,28 @@ Flashify is a powerful web application designed to create and manage flashcards,
 ## Architecture:
 ![image](https://github.com/user-attachments/assets/3c534cef-c44b-4c3d-950d-384963831d23)
 
+## File Structure
+```
+|-- backend
+|     -- src
+|       |-- config
+|       |-- controllers
+|       |-- middlewares
+|       |-- migrations
+|       |-- models
+|       |-- routes
+|       |   `-- v1
+|       |-- seeders
+|       `-- services
+|-- frontend
+    |-- dist
+    | -- src
+        |-- components
+        |-- hooks
+        |-- pages
+.github
+  -- workflows
+```
 
 ## Setting up project
 
