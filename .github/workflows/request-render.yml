@@ -1,0 +1,14 @@
+# This will make a request render backend to stop spins down the server on idle
+name: Request Render
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/12 * * * *"
+
+jobs:
+  request-render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request Render
+        run: curl -X GET ${{ secrets.RENDER_BACKEND_URL }}
