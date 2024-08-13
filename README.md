@@ -98,6 +98,19 @@ git clone https://github.com/aialok/flashify.git
 - Make sure you have redis-cli and mysql in local if you are using localhost
 - Wohoo ! you are done : )
 
+### Local Database:
+- Tables
+
+![image](https://github.com/user-attachments/assets/24652a32-e273-47f5-b861-a7fd0918bd1f)
+- Pack Table
+
+![image](https://github.com/user-attachments/assets/8481179c-2de5-4a49-98a9-d95de8389136)
+- Flashcards Table
+
+![image](https://github.com/user-attachments/assets/56e0e629-2d02-43cb-b84a-4133b76b5434)
+
+
+
 ### Run your backend and frontend server
   - cd to backend `pnpm run dev`
   - cd to frontend `pnpm run dev`
