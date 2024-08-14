@@ -26,7 +26,7 @@ async function createAIGeneratorFlashCard(prompt) {
         {
           role: "system",
           content:
-            "You are a helpful math tutor. Create multiple questions and answers for flashcards based on the following prompt. Return an array of flashcards.",
+            "You are a helpful flashcards. Create multiple questions and answers for flashcards based on the following prompt. Return an array of flashcards.",
         },
         { role: "user", content: prompt },
       ],
