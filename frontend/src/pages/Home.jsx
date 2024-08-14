@@ -20,17 +20,20 @@ const HomePage = () => {
         `${import.meta.env.VITE_BACKEND_URI}/api/v1/packs`
       );
 
-      const flashcardsWithLength = await Promise.all(
-        response.data.data.map(async (pack) => {
-          const packLengthResponse = await axios.get(
-            `${import.meta.env.VITE_BACKEND_URI}/api/v1/pack-length/${pack.id}`
-          );
-          return { ...pack, length: packLengthResponse.data.data };
-        })
-      );
+      /* Removing this because this causes too much request to backend */
 
-      console.log(flashcardsWithLength);
-      setFlashcards(flashcardsWithLength);
+      // const flashcardsWithLength = await Promise.all(
+      //   response.data.data.map(async (pack) => {
+      //     const packLengthResponse = await axios.get(
+      //       `${import.meta.env.VITE_BACKEND_URI}/api/v1/pack-length/${pack.id}`
+      //     );
+      //     return { ...pack, length: packLengthResponse.data.data };
+      //   })
+      // );
+
+      // sort flashcards by id in descending order
+      const flashcardsPack = response.data.data.sort((a, b) => b.id - a.id);
+      setFlashcards(flashcardsPack);
     } catch (error) {
       console.error("Error fetching flashcards:", error);
       toast.error(error.response?.data?.message || "Error fetching flashcards");
@@ -98,10 +101,13 @@ const HomePage = () => {
             <h2 className="text-xl sm:text-3xl font-bold text-gray-900">
               Recent Flashcards
             </h2>
-            <button className="bg-blue-600 text-white font-semibold py-2 px-4 sm:px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2 text-sm sm:text-base">
+            <Link
+              to="/create-flashcard"
+              className="bg-blue-600 text-white font-semibold py-2 px-4 sm:px-6 rounded-full hover:bg-blue-700 transition duration-300 flex items-center space-x-2 text-sm sm:text-base"
+            >
               <Plus className="w-5 h-5" />
               <span>New Set</span>
-            </button>
+            </Link>
           </div>
           {loading ? (
             <Loader />
@@ -110,10 +116,10 @@ const HomePage = () => {
               {flashcards.map((deck) => (
                 <div
                   key={deck.id}
-                  className="bg-white border rounded-xl p-6 hover:shadow-lg transition duration-300"
+                  className="flex flex-col justify-between bg-white border rounded-xl p-6 hover:shadow-lg transition duration-300"
                 >
                   <h3 className="font-semibold text-xl mb-2">{deck.name}</h3>
-                  <p className="text-gray-600 mb-4">{deck.length || 0} cards</p>
+                  {/* <p className="text-gray-600 mb-4">{deck.length || 0} cards</p> */}
                   <div className="flex justify-between items-center text-blue-600">
                     <Link to={`/flashcard-pack/${deck.id}`}>
                       <span className="flex items-center">
