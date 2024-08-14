@@ -17,7 +17,7 @@ const limiter = rateLimit({
     sendCommand: (...args) => redis.call(...args)
   }),
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50, // limiting each IP to 50 requests per windowMs
+  max: 100, // limiting each IP to 50 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
   keyGenerator: (req) => {
