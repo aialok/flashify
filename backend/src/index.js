@@ -1,8 +1,39 @@
 const express = require("express");
 const apiRoutes = require("./routes/index.js");
 const cors = require("cors");
+const rateLimit = require('express-rate-limit');
+const {RedisStore} = require('rate-limit-redis');
+const redis = require('./config/redis.config.js')
+const morgan = require('morgan');
 
 const app = express();
+
+// Logging
+app.use(morgan('dev'));
+
+// Rate limiter configuration
+const limiter = rateLimit({
+  store: new RedisStore({
+    sendCommand: (...args) => redis.call(...args)
+  }),
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // limiting each IP to 50 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    return req.ip; 
+  },
+  skip: (req) => {
+    return req.path === '/health';
+  },
+  handler: (req, res) => {
+    res.status(429).json({
+      message: "Too many requests, please try again later.",
+      success: false,
+      status: 429,
+    });
+  }
+});
 
 // Middlewares
 app.use(express.json());
@@ -16,6 +47,9 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+
+// Apply rate limiter to all routes
+app.use(limiter);
 
 // Routes : Version 1
 app.use("/api", apiRoutes);

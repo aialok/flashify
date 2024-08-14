@@ -16,9 +16,12 @@
     "@instructor-ai/instructor": "^1.5.0",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
     "ioredis": "^5.4.1",
+    "morgan": "^1.10.0",
     "mysql2": "^3.11.0",
     "openai": "^4.55.4",
+    "rate-limit-redis": "^4.2.0",
     "sequelize": "^6.37.3",
     "zod": "^3.23.8"
   },
