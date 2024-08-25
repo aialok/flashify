@@ -9,8 +9,12 @@ const redis = require("../config/redis.config");
 class FlashcardServices {
   // create a new Flashcard
   async createFlashcard(data) {
+    // using transaction to make sure that both the pack and flashcard are created together
     const t = await sequelize.transaction();
     try {
+
+      /* Todo: update this to use bulk insert instead */
+
       const [pack, created] = await Pack.findOrCreate({
         where: { name: data.packName.trim() },
         defaults: { name: data.packName.trim() },
